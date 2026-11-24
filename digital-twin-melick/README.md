@@ -59,3 +59,13 @@ Open daarna http://localhost:8080. Stoppen kan met Ctrl + C.
 | "Fout: ... HTTP 502" | Draait Docker/ArangoDB? Klopt het wachtwoord? |
 | Kaart zonder tegels | Controleer `lib/leaflet/` en je internetverbinding (PDOK) |
 | Pagina laadt niet | Draait `node server.js` nog? |
+
+
+je schrijft in terminal 
+
+$env:ARANGO_USER = "root"
+$env:ARANGO_PASS = Read-Host "ArangoDB root-wachtwoord"
+node server.js
+
+je schrijft de wachtwoord van aragonoDB en dan ga je naar http://localhost:8080/
+
