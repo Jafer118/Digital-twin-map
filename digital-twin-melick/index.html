@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Twin Melick</title>
+  <!-- Leaflet lokaal hosten (geen externe CDN): download leaflet.css/js naar ./lib/leaflet/ -->
+  <link rel="stylesheet" href="lib/leaflet/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">M</div>
+    <input id="zoek" type="search" placeholder="Zoek locaties, straten, etc...">
+    <button id="nieuweMelding">Nieuwe Melding Doen</button>
+  </header>
+
+  <main>
+    <!-- Links: lagen en filters -->
+    <aside id="lagen">
+      <h2>Kaartlagen &amp; Filters</h2>
+
+      <h3>Hoofdgroepen (Aan/Uit)</h3>
+      <label class="schakelaar"><input type="checkbox" data-laag="locaties" checked><span>Laag: Locaties</span></label>
+      <label class="schakelaar"><input type="checkbox" data-laag="voorzieningen" checked><span>Laag: Voorzieningen</span></label>
+      <label class="schakelaar"><input type="checkbox" data-laag="routes" checked><span>Laag: Routes</span></label>
+      <label class="schakelaar"><input type="checkbox" data-laag="meldingen" checked><span>Laag: Meldingen</span></label>
+
+      <h3>Filters</h3>
+      <label>Wijk
+        <select id="filterWijk">
+          <option value="">Alle wijken</option>
+          <option>Melick-Centrum</option>
+          <option>Melick-Zuid</option>
+          <option>Melick-Oost</option>
+          <option>Waterschei</option>
+        </select>
+      </label>
+      <label>Status
+        <select id="filterStatus">
+          <option value="">Alle statussen</option>
+          <option value="actief">Actief</option>
+          <option value="open">Open</option>
+          <option value="in_behandeling">In behandeling</option>
+          <option value="afgehandeld">Afgehandeld</option>
+        </select>
+      </label>
+      <label class="schakelaar"><input type="checkbox" id="alleenZichtbaar" checked><span>Alleen kaartgebied laden</span></label>
+      <p id="status">Klaar.</p>
+    </aside>
+
+    <!-- Midden: kaart -->
+    <div id="kaart"></div>
+
+    <!-- Rechts: details -->
+    <aside id="detail" hidden>
+      <button id="sluit" aria-label="Sluiten">×</button>
+      <h2 id="dTitel"></h2>
+      <dl id="dVelden"></dl>
+    </aside>
+  </main>
+
+  <footer>Digital Twin Melick · data: ArangoDB (lokaal) · kaart: PDOK / OpenStreetMap</footer>
+
+  <script src="lib/leaflet/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

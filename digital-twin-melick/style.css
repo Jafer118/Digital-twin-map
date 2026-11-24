@@ -1,0 +1,39 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; font: 15px/1.4 system-ui, sans-serif; color: #1c2430; }
+body { display: flex; flex-direction: column; background: #eef1f4; }
+
+header { display: flex; gap: 12px; align-items: center; padding: 10px 16px; background: #fff; border-bottom: 1px solid #dde2e8; }
+.logo { font: 800 26px/1 system-ui; color: #0b2e6b; width: 36px; }
+header input { flex: 1; padding: 9px 12px; border: 1px solid #c9d0d8; border-radius: 6px; }
+header button { background: #0b0b0b; color: #fff; border: 0; padding: 10px 18px; border-radius: 6px; cursor: pointer; }
+
+main { flex: 1; display: flex; min-height: 0; position: relative; }
+#kaart { flex: 1; }
+
+#lagen { width: 270px; padding: 14px; background: #fff; overflow-y: auto; border-right: 1px solid #dde2e8; z-index: 500; }
+#lagen h2 { margin: 0 0 8px; font-size: 18px; }
+#lagen h3 { margin: 16px 0 6px; font-size: 14px; color: #55606e; }
+#lagen label { display: block; margin: 6px 0; }
+#lagen select { width: 100%; padding: 6px; margin-top: 3px; }
+.schakelaar { display: flex !important; align-items: center; gap: 8px; cursor: pointer; }
+#status { font-size: 12px; color: #667; margin-top: 14px; }
+
+#detail { width: 320px; padding: 16px; background: #fff; border-left: 1px solid #dde2e8; overflow-y: auto; position: relative; z-index: 500; }
+#detail[hidden] { display: none; }
+#detail h2 { margin: 0 24px 10px 0; font-size: 18px; }
+#sluit { position: absolute; top: 8px; right: 10px; border: 0; background: none; font-size: 24px; cursor: pointer; }
+dt { font-weight: 600; margin-top: 8px; font-size: 13px; color: #55606e; }
+dd { margin: 0; }
+
+footer { padding: 8px 16px; background: #fff; border-top: 1px solid #dde2e8; font-size: 13px; }
+
+.punt { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 3px rgba(0,0,0,.5); }
+.punt.locaties { background: #2f7fd3; }
+.punt.voorzieningen { background: #e0b42a; }
+.punt.meldingen { background: #d9542b; }
+
+@media (max-width: 800px) {
+  main { flex-direction: column; }
+  #lagen { width: 100%; max-height: 35%; }
+  #detail { width: 100%; }
+}
