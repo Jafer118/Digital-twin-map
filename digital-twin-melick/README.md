@@ -62,7 +62,9 @@ Open daarna http://localhost:8080. Stoppen kan met Ctrl + C.
 
 
 je schrijft in terminal 
-
+cd "C:\Users\Jafer\OneDrive\Documenten\GitHub\Digital-twin-map\digital-twin-melick"
+(deze path is een voorbeeld van wat je zou moeten krijgen)
+$env:ARANGO_USER = "root"
 $env:ARANGO_USER = "root"
 $env:ARANGO_PASS = Read-Host "ArangoDB root-wachtwoord"
 node server.js
