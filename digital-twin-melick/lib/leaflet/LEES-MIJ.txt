@@ -1,1 +1,0 @@
-Zet hier leaflet.css, leaflet.js en de map images (Leaflet 1.9.4 van leafletjs.com, knop Download).
