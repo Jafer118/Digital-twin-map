@@ -1,7 +1,20 @@
 // app.js: Digital Twin Melick (vanilla JS + Leaflet)
 
 // 1. Kaart met PDOK-achtergrond (Nederlandse overheid, geen Amerikaanse tiles)
-const kaart = L.map('kaart').setView([51.1717, 5.9833], 14);
+// Alleen Melick: de kaart blijft binnen dit gebied (zuidwest-hoek, noordoost-hoek)
+const MELICK_GRENZEN = [[51.145, 6.015], [51.175, 6.065]];
+const kaart = L.map('kaart', {
+  maxBounds: MELICK_GRENZEN,
+  maxBoundsViscosity: 1.0,   // 1.0 = hard stoppen aan de rand
+  maxZoom: 18,
+}).setView([51.1604, 6.0373], 15);
+
+// Uitzoomen kan alleen zover dat het beeld nog binnen de grenzen valt (past zich aan je schermgrootte aan)
+function stelMinZoomIn() {
+  kaart.setMinZoom(kaart.getBoundsZoom(MELICK_GRENZEN, true));
+}
+stelMinZoomIn();
+kaart.on('resize', stelMinZoomIn);
 L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: 'Kaartgegevens &copy; <a href="https://www.pdok.nl">PDOK</a> / Kadaster'

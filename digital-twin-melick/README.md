@@ -1,6 +1,7 @@
 # Digital Twin Melick
 
-HTML + CSS + vanilla JavaScript (Leaflet) met een kleine Node.js-server en ArangoDB. Geen PHP, geen frameworks, geen npm-pakketten.
+HTML + CSS + JavaScript (Leaflet) in de browser, een kleine Python-server en ArangoDB.
+Geen frameworks en geen pip-pakketten: `server.py` gebruikt alleen wat in Python zit (Python 3.8 of hoger).
 
 ## Mapindeling
 
@@ -9,65 +10,60 @@ digital-twin-melick/
  ├─ index.html        de pagina
  ├─ style.css         de opmaak
  ├─ app.js            kaart en logica in de browser
- ├─ server.js         Node-server: serveert de pagina en praat met ArangoDB
- ├─ aql-queries.md    AQL-queries en indexen
- └─ lib/leaflet/      hier zet JIJ Leaflet in (zie stap 1)
+ ├─ server.py         Python-server: deelt de pagina uit en praat met ArangoDB
+ ├─ aql-queries.md    naslag: AQL-queries en indexen
+ └─ lib/leaflet/      Leaflet 1.9.4 (leaflet.css, leaflet.js, map images)
 ```
 
-## Stap 1: Leaflet erbij zetten
+## Lokaal draaien (je eigen computer)
 
-1. Download Leaflet 1.9 van https://leafletjs.com (knop Download) en pak het uit.
-2. Kopieer `leaflet.css`, `leaflet.js` en de map `images` naar `lib/leaflet/`.
-
-## Stap 2: Node.js installeren
-
-Download de LTS-versie van https://nodejs.org (versie 18 of hoger). Controleer met `node -v`.
-
-## Stap 3: ArangoDB voorbereiden
-
-- Maak de indexen aan zoals beschreven in `aql-queries.md` (sectie 3).
-- Voeg een testdocument toe aan `locaties`:
-
-```json
-{
-  "naam": "Dorpskern Melick",
-  "wijk": "Melick-Centrum",
-  "status": "actief",
-  "omschrijving": "Test",
-  "geometry": { "type": "Point", "coordinates": [5.9833, 51.1717] }
-}
-```
-
-Let op: eerst lengtegraad (5.98), dan breedtegraad (51.17).
-
-## Stap 4: Starten
-
-Open PowerShell in deze map en typ:
+Controleer Python met `python --version` (op Windows soms `py --version`). Open PowerShell in deze map:
 
 ```powershell
 $env:ARANGO_PASS = "jouw-arangodb-wachtwoord"
-node server.js
+python server.py
 ```
 
-Open daarna http://localhost:8080. Stoppen kan met Ctrl + C.
+Open http://localhost:8080. Stoppen met Ctrl + C.
+
+## Op een server (via PuTTY)
+
+1. **Inloggen:** PuTTY → Host Name = het IP-adres, Port 22 → Open → gebruikersnaam en wachtwoord.
+2. **Python controleren:** `python3 --version` (op Ubuntu staat Python 3 er meestal al op).
+3. **ArangoDB:** staat het er al, sla dit over. Anders, met Docker (alleen bereikbaar op de server zelf):
+   ```bash
+   sudo apt update && sudo apt install -y docker.io
+   sudo docker run -d --name arangodb --restart unless-stopped \
+     -p 127.0.0.1:8529:8529 -e ARANGO_ROOT_PASSWORD=kies-een-wachtwoord \
+     -v arangodb_data:/var/lib/arangodb3 arangodb/arangodb
+   ```
+   Maak daarna in de database `digital_twin_melick` de vier collecties aan (zie de webinterface, of via een SSH-tunnel naar poort 8529).
+4. **Bestanden uploaden:** met WinSCP (of `pscp` uit PuTTY) de hele map `digital-twin-melick` naar de server kopiëren, inclusief `lib/leaflet/`.
+5. **Starten:**
+   ```bash
+   cd digital-twin-melick
+   HOST=0.0.0.0 ARANGO_PASS="jouw-wachtwoord" nohup python3 server.py > server.log 2>&1 &
+   ```
+   `nohup` en `&` zorgen dat de server blijft draaien als je PuTTY sluit. Stoppen: `pkill -f server.py`.
+6. **Openen:** http://IP-ADRES:8080 in de browser. Lukt dat niet, dan staat poort 8080 dicht in de firewall (vraag de beheerder).
+
+## Instellingen (omgevingsvariabelen)
+
+| Variabele | Standaard | Betekenis |
+|---|---|---|
+| `ARANGO_PASS` | (leeg) | wachtwoord van ArangoDB |
+| `ARANGO_USER` | root | gebruikersnaam |
+| `ARANGO_URL` | http://localhost:8529 | adres van ArangoDB |
+| `ARANGO_DB` | digital_twin_melick | databasenaam |
+| `HOST` | 127.0.0.1 | `0.0.0.0` = ook van buiten de computer bereikbaar |
+| `PORT` | 8080 | poort van de site |
 
 ## Problemen
 
 | Melding | Oplossing |
 |---|---|
-| "0 objecten geladen" | Controleer of `geometry` goed is ingevuld |
-| "Fout: ... HTTP 502" | Draait Docker/ArangoDB? Klopt het wachtwoord? |
-| Kaart zonder tegels | Controleer `lib/leaflet/` en je internetverbinding (PDOK) |
-| Pagina laadt niet | Draait `node server.js` nog? |
-
-
-je schrijft in terminal 
-cd "C:\Users\Jafer\OneDrive\Documenten\GitHub\Digital-twin-map\digital-twin-melick"
-(deze path is een voorbeeld van wat je zou moeten krijgen)
-$env:ARANGO_USER = "root"
-$env:ARANGO_USER = "root"
-$env:ARANGO_PASS = Read-Host "ArangoDB root-wachtwoord"
-node server.js
-
-je schrijft de wachtwoord van aragonoDB en dan ga je naar http://localhost:8080/
-
+| "Fout: ... HTTP 502" | Open `/api?laag=locaties` en lees `detail` |
+| `User not authenticated` | `ARANGO_PASS` niet (goed) ingesteld in dit venster |
+| `Connection refused` | ArangoDB draait niet of staat op een ander adres (`ARANGO_URL`) |
+| Grijs vlak, geen kaart | `lib/leaflet/` ontbreekt of is leeg |
+| Site niet bereikbaar op het IP | `HOST=0.0.0.0` vergeten, of poort 8080 dicht in de firewall |

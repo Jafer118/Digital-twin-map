@@ -6,7 +6,7 @@ Aanname datamodel (pas aan als jouw velden anders heten):
 // locaties / voorzieningen / meldingen
 { "naam": "Dorpskern Melick", "wijk": "Melick-Centrum", "status": "actief",
   "categorie": "historisch",
-  "geometry": { "type": "Point", "coordinates": [5.9833, 51.1717] } }   // GeoJSON = [lng, lat]!
+  "geometry": { "type": "Point", "coordinates": [6.0373, 51.1604] } }   // GeoJSON = [lng, lat]!
 
 // routes
 { "naam": "Busroute 73", "wijk": "Melick-Zuid", "status": "actief",
@@ -51,7 +51,7 @@ FOR d IN locaties
 Bind-variabele (west, zuid, oost, noord):
 ```json
 { "bbox": { "type": "Polygon",
-  "coordinates": [[[5.95,51.15],[6.02,51.15],[6.02,51.20],[5.95,51.20],[5.95,51.15]]] } }
+  "coordinates": [[[6.00,51.14],[6.08,51.14],[6.08,51.18],[6.00,51.18],[6.00,51.14]]] } }
 ```
 
 **Voor routes (lijnen) gebruik je `GEO_INTERSECTS`** i.p.v. `GEO_CONTAINS`:
@@ -73,7 +73,7 @@ FOR d IN meldingen
 **Wijk dichtbij een punt** (bv. alles binnen 500 m van het kerkplein):
 ```aql
 FOR d IN voorzieningen
-  LET afstand = GEO_DISTANCE(d.geometry, GEO_POINT(5.9833, 51.1717))
+  LET afstand = GEO_DISTANCE(d.geometry, GEO_POINT(6.0373, 51.1604))
   FILTER afstand <= 500
   SORT afstand
   RETURN MERGE(d, { afstand })
@@ -101,4 +101,4 @@ Alleen voor `meldingen` ook:
 Tips:
 - "GeoJSON" aanvinken is essentieel, anders verwacht ArangoDB `[lat, lng]` en staan je punten verkeerd.
 - Controleer met **Explain** (tabblad *Queries*) dat de query `IndexNode` gebruikt en geen `EnumerateCollectionNode`.
-- Een `FILTER x == @a OR ...` kan een index uitschakelen. Daarom bouwt `server.js` alleen de FILTER-regels op die echt nodig zijn.
+- Een `FILTER x == @a OR ...` kan een index uitschakelen. Daarom bouwt `server.py` alleen de FILTER-regels op die echt nodig zijn.
